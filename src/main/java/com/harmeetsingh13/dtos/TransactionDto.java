@@ -3,14 +3,17 @@
  */
 package com.harmeetsingh13.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Harmeet Singh(Taara)
  *
  */
 public class TransactionDto {
-
+	
 	private String type;
 	private double amount;
+	@JsonProperty(value = "parent_id")
 	private Long parentId;
 	
 	public String getType() {

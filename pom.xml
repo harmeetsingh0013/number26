@@ -27,6 +27,8 @@
 		<jackson>2.5.3</jackson>
 		<junit>4.11</junit>
 		<hamcrest>1.3</hamcrest>
+		<javax-validator>1.1.0.Final</javax-validator>
+		<hibernate-validator>5.2.4.Final</hibernate-validator>
 	</properties>
 
 	<dependencies>
@@ -168,6 +170,19 @@
 			<artifactId>hamcrest-library</artifactId>
 			<version>${hamcrest}</version>
 		</dependency>
+
+		<!-- Validators -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${javax-validator}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -193,7 +208,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${mvn-war}</version>
 				<configuration>
-					<warName>sales-order-services</warName>
+					<warName>number26</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
