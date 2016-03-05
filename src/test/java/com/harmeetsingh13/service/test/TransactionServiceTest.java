@@ -44,7 +44,7 @@ public class TransactionServiceTest {
 	@Test
 	public void testA_TransactionNotFound() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
-		thrown.expectMessage("Transaction not found");
+		thrown.expectMessage("Transaction not found.");
 		thrown.expect(hasProperty("errorCode", is("1001")));
 		
 		transactionService.findTransactionByTransactionId(12);
@@ -53,7 +53,7 @@ public class TransactionServiceTest {
 	@Test
 	public void testB_ParentTransactionNotFound() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
-		thrown.expectMessage("Parent Transaction not found");
+		thrown.expectMessage("Parent Transaction not found.");
 		thrown.expect(hasProperty("errorCode", is("1002")));
 		
 		TransactionDto dto = new TransactionDto();
@@ -94,7 +94,7 @@ public class TransactionServiceTest {
 	@Test
 	public void testE_TransationsNotFoundByTransactionType() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
-		thrown.expectMessage("Transactions not found");
+		thrown.expectMessage("Transactions not found.");
 		thrown.expect(hasProperty("errorCode", is("1003")));
 		
 		transactionService.findTransactionIdsByTransactionType("shopping");
@@ -130,7 +130,7 @@ public class TransactionServiceTest {
 	@Test
 	public void testG_TransactionNotFoundWhenTransactionsTotal() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
-		thrown.expectMessage("Transaction not found");
+		thrown.expectMessage("Transaction not found.");
 		thrown.expect(hasProperty("errorCode", is("1001")));
 		
 		transactionService.findTransactionsTotalAmountByTransactionId(12);
@@ -184,5 +184,16 @@ public class TransactionServiceTest {
 		assertThat(transactionIds, notNullValue());
 		assertThat(6, is(transactionIds.size()));
 		assertThat(transactionIds, containsInAnyOrder(1000l, 1001l, 1002l, 1003l, 1004l, 1005l));
+	}
+	
+	public void testK_TransactionIdAlreadyExists() throws TransactionNotFound {
+		thrown.expect(TransactionNotFound.class);
+		thrown.expectMessage("Transaction id already exists.");
+		thrown.expect(hasProperty("errorCode", is("1004")));
+		
+		TransactionDto dto = new TransactionDto();
+		dto.setAmount(5000);
+		dto.setType("shopping");
+		transactionService.createNewTransaction(1, dto);
 	}
 }
