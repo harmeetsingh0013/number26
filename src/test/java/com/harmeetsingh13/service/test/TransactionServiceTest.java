@@ -42,7 +42,7 @@ public class TransactionServiceTest {
 	public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
-	public void test1TransactionNotFound() throws TransactionNotFound {
+	public void testA_TransactionNotFound() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
 		thrown.expectMessage("Transaction not found");
 		thrown.expect(hasProperty("errorCode", is("1001")));
@@ -51,7 +51,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test2ParentTransactionNotFound() throws TransactionNotFound {
+	public void testB_ParentTransactionNotFound() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
 		thrown.expectMessage("Parent Transaction not found");
 		thrown.expect(hasProperty("errorCode", is("1002")));
@@ -63,7 +63,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test3NewTransactionWithoutParent() throws TransactionNotFound {
+	public void testC_NewTransactionWithoutParent() throws TransactionNotFound {
 		
 		TransactionDto dto = new TransactionDto();
 		dto.setAmount(1000);
@@ -77,7 +77,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test4NewTransactionWithParent() throws TransactionNotFound {
+	public void testD_NewTransactionWithParent() throws TransactionNotFound {
 		
 		TransactionDto dto = new TransactionDto();
 		dto.setAmount(5000);
@@ -92,7 +92,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test5TransationsNotFoundByTransactionType() throws TransactionNotFound {
+	public void testE_TransationsNotFoundByTransactionType() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
 		thrown.expectMessage("Transactions not found");
 		thrown.expect(hasProperty("errorCode", is("1003")));
@@ -101,7 +101,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test6TransactionsByTransactionType() throws TransactionNotFound {
+	public void testF_TransactionsByTransactionType() throws TransactionNotFound {
 		
 		Set<Long> transactionIds1 = transactionService.findTransactionIdsByTransactionType("car");
 		Set<Long> transactionIds2 = transactionService.findTransactionIdsByTransactionType("CAR");
@@ -128,7 +128,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test7TransactionNotFoundWhenTransactionsTotal() throws TransactionNotFound {
+	public void testG_TransactionNotFoundWhenTransactionsTotal() throws TransactionNotFound {
 		thrown.expect(TransactionNotFound.class);
 		thrown.expectMessage("Transaction not found");
 		thrown.expect(hasProperty("errorCode", is("1001")));
@@ -137,7 +137,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test8TransactionTotalAmount() throws TransactionNotFound {
+	public void testH_TransactionTotalAmount() throws TransactionNotFound {
 		
 		double transaction1Amount = transactionService.findTransactionsTotalAmountByTransactionId(1);
 		double transaction2Amount = transactionService.findTransactionsTotalAmountByTransactionId(10);
@@ -147,51 +147,42 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	public void test9MultiHierarchyTransctionsTotalAmount() throws TransactionNotFound {
+	public void testI_MultipleTransctionsTotalAmount() throws TransactionNotFound {
 		
-		for (long i = 11; i <= 20; i++) {
+		for (long i = 0; i <= 5; i++) {
 			TransactionDto dto = new TransactionDto();
-			if(i == 11){
-				dto.setAmount(1000 * i);
-				dto.setType("shopping");
-				transactionService.createNewTransaction(i, dto);
+			dto.setType("shopping");
+			if(i == 0){
+				dto.setAmount(10000);
+				transactionService.createNewTransaction(1000, dto);
 				continue;
 			}
 			dto.setAmount(1000 * i);
-			dto.setType("car"+i);
-			dto.setParentId(i - 1);
-			transactionService.createNewTransaction(i, dto);
+			dto.setParentId(1000L);
+			transactionService.createNewTransaction(i + 1000, dto);
 		}
 		
-		double transaction11Amount = transactionService.findTransactionsTotalAmountByTransactionId(11);
-		double transaction12Amount = transactionService.findTransactionsTotalAmountByTransactionId(12);
-		double transaction13Amount = transactionService.findTransactionsTotalAmountByTransactionId(13);
-		double transaction14Amount = transactionService.findTransactionsTotalAmountByTransactionId(14);
-		double transaction15Amount = transactionService.findTransactionsTotalAmountByTransactionId(15);
-		double transaction16Amount = transactionService.findTransactionsTotalAmountByTransactionId(16);
-		double transaction17Amount = transactionService.findTransactionsTotalAmountByTransactionId(17);
-		double transaction18Amount = transactionService.findTransactionsTotalAmountByTransactionId(18);
-		double transaction19Amount = transactionService.findTransactionsTotalAmountByTransactionId(19);
-		double transaction20Amount = transactionService.findTransactionsTotalAmountByTransactionId(20);
+		double parentTransactionAmount = transactionService.findTransactionsTotalAmountByTransactionId(1000);
+		double transaction1Amount = transactionService.findTransactionsTotalAmountByTransactionId(1001);
+		double transaction2Amount = transactionService.findTransactionsTotalAmountByTransactionId(1002);
+		double transaction3Amount = transactionService.findTransactionsTotalAmountByTransactionId(1003);
+		double transaction4Amount = transactionService.findTransactionsTotalAmountByTransactionId(1004);
+		double transaction5Amount = transactionService.findTransactionsTotalAmountByTransactionId(1005);
 		
-		assertThat(new Double(11000), is(transaction11Amount));
-		assertThat(new Double(23000), is(transaction12Amount));
-		assertThat(new Double(36000), is(transaction13Amount));
-		assertThat(new Double(50000), is(transaction14Amount));
-		assertThat(new Double(65000), is(transaction15Amount));
-		assertThat(new Double(81000), is(transaction16Amount));
-		assertThat(new Double(98000), is(transaction17Amount));
-		assertThat(new Double(116000), is(transaction18Amount));
-		assertThat(new Double(135000), is(transaction19Amount));
-		assertThat(new Double(155000), is(transaction20Amount));
+		assertThat(new Double(25000), is(parentTransactionAmount));
+		assertThat(new Double(1000), is(transaction1Amount));
+		assertThat(new Double(2000), is(transaction2Amount));
+		assertThat(new Double(3000), is(transaction3Amount));
+		assertThat(new Double(4000), is(transaction4Amount));
+		assertThat(new Double(5000), is(transaction5Amount));
 	}
 	
 	@Test
-	public void test10MultipleTransactionsByTransactionType() throws TransactionNotFound {
+	public void testJ_MultipleTransactionsByTransactionType() throws TransactionNotFound {
 		
 		Set<Long> transactionIds = transactionService.findTransactionIdsByTransactionType("shopping");
 		assertThat(transactionIds, notNullValue());
-		assertThat(10, is(transactionIds.size()));
-		assertThat(transactionIds, containsInAnyOrder(11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
+		assertThat(6, is(transactionIds.size()));
+		assertThat(transactionIds, containsInAnyOrder(1000l, 1001l, 1002l, 1003l, 1004l, 1005l));
 	}
 }
