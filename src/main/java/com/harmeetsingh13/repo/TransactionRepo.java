@@ -52,4 +52,9 @@ public interface TransactionRepo {
 	 * @return				sum of child transaction amount.
 	 */
 	public double findChildTransactionsTotalAmountByParentTransactionId(long transactionId);
+
+	/**
+	 * Reset memory db
+	 */
+	public void resetMemoryDB();
 }

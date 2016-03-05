@@ -41,27 +41,26 @@ public class TransactionController {
 	@Autowired
 	private TransactionService transactionService;
 	
-	@RequestMapping(value = "/transaction/{transaction_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String newTransaction(@PathVariable("transaction_id") long transactionId, 
+	@RequestMapping(value = "/transaction/{transaction_id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, String> newTransaction(@PathVariable("transaction_id") long transactionId, 
 			@RequestBody TransactionDto dto, BindingResult results) throws JsonProcessingException {
 		
-		String response = "{\"status\": \"ok\"}";
-		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> response = new HashMap<>();
+		response.put("status", "ok");
 		
 		transactionDtoValidator.validate(dto, results);
 		if(results.hasErrors()){
-			Map<String, String> errors =  results.getFieldErrors().stream()
+			response =  results.getFieldErrors().stream()
 				.collect(Collectors.toMap((FieldError field) -> field.getField(), (FieldError field) -> field.getDefaultMessage()));
-			response = mapper.writeValueAsString(errors);
 			return response;
 		}
 		
 		try{
 			transactionService.createNewTransaction(transactionId, dto);
 		}catch(TransactionNotFound ex){
-			Map<String, String> errors = new HashMap<>();
-			errors.put(ex.getErrorCode(), ex.getMessage());
-			response = mapper.writeValueAsString(errors);
+			response = new HashMap<>();
+			response.put(ex.getErrorCode(), ex.getMessage());
 		}
 		
 		return response;
@@ -84,19 +83,14 @@ public class TransactionController {
 	}
 	
 	@RequestMapping(value = "/sum/{transaction_id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody String transactionsSum(@PathVariable("transaction_id") long transactionId) throws JsonProcessingException {
+	public @ResponseBody Map<String, String> transactionsSum(@PathVariable("transaction_id") long transactionId) throws JsonProcessingException {
 		
-		String response = "";
-		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> response = new HashMap<>();
 		try{
 			double sum = transactionService.findTransactionsTotalAmountByTransactionId(transactionId);
-			Map<String, Double> output = new HashMap<>();
-			output.put("sum", sum);
-			response = mapper.writeValueAsString(output);
+			response.put("sum", String.valueOf(sum));
 		}catch (TransactionNotFound ex){
-			Map<String, String> errors = new HashMap<>();
-			errors.put(ex.getErrorCode(), ex.getMessage());
-			response = mapper.writeValueAsString(errors);
+			response.put(ex.getErrorCode(), ex.getMessage());
 		}
 		
 		return response;

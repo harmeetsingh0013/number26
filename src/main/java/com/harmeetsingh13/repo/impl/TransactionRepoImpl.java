@@ -20,8 +20,8 @@ import com.harmeetsingh13.repo.TransactionRepo;
 @Repository
 public class TransactionRepoImpl implements TransactionRepo{
 
-	private static final Map<Long, Transaction> transactions = new HashMap<>();
-	private static final Map<String, Set<Long>> transactionTypes = new HashMap<>();
+	private static Map<Long, Transaction> transactions = new HashMap<>();
+	private static Map<String, Set<Long>> transactionTypes = new HashMap<>();
 	
 	@Override
 	public Transaction findTransactionByTransactionId(long transactionId) {
@@ -50,5 +50,11 @@ public class TransactionRepoImpl implements TransactionRepo{
 				.filter(transaction -> transaction.getParentTransaction().getId().equals(transactionId))
 				.mapToDouble(transaction -> transaction.getAmount())
 				.sum();
+	}
+
+	@Override
+	public void resetMemoryDB() {
+		transactions = new HashMap<>();
+		transactionTypes = new HashMap<>();
 	}
 }
