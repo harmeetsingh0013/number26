@@ -77,10 +77,7 @@ public class TransactionServiceImpl implements TransactionService{
 			throw new TransactionNotFound("1001", "Transaction not found");
 		}
 		double totalAmount = transaction.getAmount();
-		while(transaction.getParentTransaction() != null){
-			totalAmount += transaction.getParentTransaction().getAmount();
-			transaction = transaction.getParentTransaction();
-		}
+		totalAmount += transactionRepo.findChildTransactionsTotalAmountByParentTransactionId(transactionId);
 		return totalAmount;
 	}
 	

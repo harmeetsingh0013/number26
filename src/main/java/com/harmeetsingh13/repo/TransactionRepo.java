@@ -17,4 +17,5 @@ public interface TransactionRepo {
 	public void saveNewTransaction(Transaction transaction);
 	public Set<Long> findTransactionsIdsByTransactionType(String transactionType);
 	public void saveOrUpdateTransactionTypes(String transactionType, Set<Long> transactionIds);
+	public double findChildTransactionsTotalAmountByParentTransactionId(long transactionId);
 }

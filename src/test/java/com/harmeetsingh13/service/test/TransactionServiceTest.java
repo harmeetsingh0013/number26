@@ -142,18 +142,18 @@ public class TransactionServiceTest {
 		double transaction1Amount = transactionService.findTransactionsTotalAmountByTransactionId(1);
 		double transaction2Amount = transactionService.findTransactionsTotalAmountByTransactionId(10);
 		
-		assertThat(new Double(1000), is(transaction1Amount));
-		assertThat(new Double(6000), is(transaction2Amount));
+		assertThat(new Double(5000), is(transaction2Amount));
+		assertThat(new Double(6000), is(transaction1Amount));
 	}
 	
 	@Test
-	public void test9MultiHierarchyTransctionTotalAmount() throws TransactionNotFound {
+	public void test9MultiHierarchyTransctionsTotalAmount() throws TransactionNotFound {
 		
 		for (long i = 11; i <= 20; i++) {
 			TransactionDto dto = new TransactionDto();
 			if(i == 11){
 				dto.setAmount(1000 * i);
-				dto.setType("car"+i);
+				dto.setType("shopping");
 				transactionService.createNewTransaction(i, dto);
 				continue;
 			}
@@ -184,5 +184,14 @@ public class TransactionServiceTest {
 		assertThat(new Double(116000), is(transaction18Amount));
 		assertThat(new Double(135000), is(transaction19Amount));
 		assertThat(new Double(155000), is(transaction20Amount));
+	}
+	
+	@Test
+	public void test10MultipleTransactionsByTransactionType() throws TransactionNotFound {
+		
+		Set<Long> transactionIds = transactionService.findTransactionIdsByTransactionType("shopping");
+		assertThat(transactionIds, notNullValue());
+		assertThat(10, is(transactionIds.size()));
+		assertThat(transactionIds, containsInAnyOrder(11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
 	}
 }

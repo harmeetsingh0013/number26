@@ -42,4 +42,13 @@ public class TransactionRepoImpl implements TransactionRepo{
 	public void saveOrUpdateTransactionTypes(String transactionType, Set<Long> transactionIds) {
 		transactionTypes.put(transactionType, transactionIds);
 	}
+
+	@Override
+	public double findChildTransactionsTotalAmountByParentTransactionId(long transactionId) {
+		return transactions.values().stream()
+				.filter(transaction -> transaction.getParentTransaction() != null)
+				.filter(transaction -> transaction.getParentTransaction().getId().equals(transactionId))
+				.mapToDouble(transaction -> transaction.getAmount())
+				.sum();
+	}
 }
