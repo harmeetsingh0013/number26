@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harmeetsingh13.dtos.TransactionDto;
+import com.harmeetsingh13.entities.Transaction;
 import com.harmeetsingh13.exceptions.TransactionNotFound;
 import com.harmeetsingh13.service.TransactionService;
 import com.harmeetsingh13.validators.TransactionDtoValidator;
@@ -63,6 +64,28 @@ public class TransactionController {
 			response.put(ex.getErrorCode(), ex.getMessage());
 		}
 		
+		return response;
+	}
+	
+	@RequestMapping(value = "/transaction/{type}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String transactionDetail(@PathVariable("transaction_id") long transactionId) throws JsonProcessingException {
+		
+		String response = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try{
+			Transaction transaction = transactionService.findTransactionByTransactionId(transactionId);
+			TransactionDto dto = new TransactionDto();
+			dto.setAmount(transaction.getAmount());
+			dto.setType(transaction.getType());
+			if(transaction.getParentTransaction() != null){
+				dto.setParentId(transaction.getParentTransaction().getId());
+			}
+			response = mapper.writeValueAsString(dto);
+		}catch (TransactionNotFound ex){
+			Map<String, String> errors = new HashMap<>();
+			errors.put(ex.getErrorCode(), ex.getMessage());
+			response = mapper.writeValueAsString(errors);
+		}
 		return response;
 	}
 	
