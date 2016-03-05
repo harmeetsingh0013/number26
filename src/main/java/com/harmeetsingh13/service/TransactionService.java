@@ -18,4 +18,5 @@ public interface TransactionService {
 	public Transaction findTransactionByTransactionId(long transactionId) throws TransactionNotFound;
 	public void createNewTransaction(long transactionId, TransactionDto dto) throws TransactionNotFound;
 	public Set<Long> findTransactionIdsByTransactionType(String transactionType) throws TransactionNotFound;
+	public double findTransactionsTotalAmountByTransactionId(long transactionId) throws TransactionNotFound;
 }
