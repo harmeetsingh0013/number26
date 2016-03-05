@@ -5,6 +5,9 @@ package com.harmeetsingh13.entities;
 
 
 /**
+ * Represent a transaction with details like 
+ * "transaction-id", "transaction-type", "transaction amount" and "parent transaction" if exist.
+ * 
  * @author Harmeet Singh(Taara)
  *
  */
@@ -19,28 +22,59 @@ public class Transaction {
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the transaction-id
+	 * @return	transaction-id
+	 */
 	public Long getId() {
 		return id;
 	}
+	/**
+	 * Create transaction with given id.
+	 * @param id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
+	/**
+	 * Gets the transaction-type
+	 * @return transaction-type
+	 */
 	public String getType() {
 		return type;
 	}
+	/**
+	 * Create transaction with given type.
+	 * @param type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
+	/**
+	 * Gets the transaction amount
+	 * @return	transaction amount
+	 */
 	public double getAmount() {
 		return amount;
 	}
+	/**
+	 * Create transaction with given amount.
+	 * @param amount
+	 */
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	
+	/**
+	 * Gets the parent transaction otherwise null.
+	 * @return	parent transaction
+	 */
 	public Transaction getParentTransaction() {
 		return parentTransaction;
 	}
+	/**
+	 * Create transaction with given parent transaction.
+	 * @param parentTransaction	parent transaction object
+	 */
 	public void setParentTransaction(Transaction parentTransaction) {
 		this.parentTransaction = parentTransaction;
 	}

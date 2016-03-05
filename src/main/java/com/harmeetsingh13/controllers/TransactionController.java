@@ -5,6 +5,7 @@ package com.harmeetsingh13.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,41 @@ public class TransactionController {
 		try{
 			transactionService.createNewTransaction(transactionId, dto);
 		}catch(TransactionNotFound ex){
+			Map<String, String> errors = new HashMap<>();
+			errors.put(ex.getErrorCode(), ex.getMessage());
+			response = mapper.writeValueAsString(errors);
+		}
+		
+		return response;
+	}
+	
+	@RequestMapping(value = "/types/{type}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String transactionsByType(@PathVariable("type") String transactionType) throws JsonProcessingException {
+		
+		String response = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try{
+			Set<Long> transactionsIds = transactionService.findTransactionIdsByTransactionType(transactionType);
+			response = mapper.writeValueAsString(transactionsIds);
+		}catch (TransactionNotFound ex){
+			Map<String, String> errors = new HashMap<>();
+			errors.put(ex.getErrorCode(), ex.getMessage());
+			response = mapper.writeValueAsString(errors);
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/sum/{transaction_id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody String transactionsSum(@PathVariable("transaction_id") long transactionId) throws JsonProcessingException {
+		
+		String response = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try{
+			double sum = transactionService.findTransactionsTotalAmountByTransactionId(transactionId);
+			Map<String, Double> output = new HashMap<>();
+			output.put("sum", sum);
+			response = mapper.writeValueAsString(output);
+		}catch (TransactionNotFound ex){
 			Map<String, String> errors = new HashMap<>();
 			errors.put(ex.getErrorCode(), ex.getMessage());
 			response = mapper.writeValueAsString(errors);
