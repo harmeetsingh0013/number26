@@ -67,7 +67,7 @@ public class TransactionController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/transaction/{type}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/transaction/{transaction_id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody String transactionDetail(@PathVariable("transaction_id") long transactionId) throws JsonProcessingException {
 		
 		String response = "";
